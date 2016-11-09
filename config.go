@@ -1,23 +1,23 @@
 package phantomjs
 
 type Capabilities struct {
-	BrowserName              string                 `json:"browserName"`
-	DriverName               string                 `json:"driverName"`
-	Version                  string                 `json:"version"`
-	Platform                 string                 `json:"platform"`
-	JavscriptEnabled         bool                   `json:"javascriptEnabled"`
-	TakesScreenshot          bool                   `json:"takesScreenshot"`
-	HandlesAlerts            bool                   `json:"handlesAlerts"`
-	DatabaseEnabled          bool                   `json:"databaseEnabled"`
-	LocationContextEnabled   bool                   `json:"locationContextEnabled"`
-	ApplicationCacheEnabled  bool                   `json:"applicationCacheEnabled"`
-	BrowserConnectionEnabled bool                   `json:"browserConnectionEnabled"`
-	CssSelectorsEnabled      bool                   `json:"cssSelectorsEnabled"`
-	WebStorageEnabled        bool                   `json:"webStorageEnabled"`
-	Rotatable                bool                   `json:"rotatable"`
-	AcceptSslCerts           bool                   `json:"acceptSslCerts"`
-	NativeEvents             bool                   `json:"nativeEvents"`
-	Proxy                    map[string]interface{} `json:"proxy"`
+	BrowserName              string `json:"browserName"`
+	DriverName               string `json:"driverName"`
+	Version                  string `json:"version"`
+	Platform                 string `json:"platform"`
+	JavscriptEnabled         bool   `json:"javascriptEnabled"`
+	TakesScreenshot          bool   `json:"takesScreenshot"`
+	HandlesAlerts            bool   `json:"handlesAlerts"`
+	DatabaseEnabled          bool   `json:"databaseEnabled"`
+	LocationContextEnabled   bool   `json:"locationContextEnabled"`
+	ApplicationCacheEnabled  bool   `json:"applicationCacheEnabled"`
+	BrowserConnectionEnabled bool   `json:"browserConnectionEnabled"`
+	CssSelectorsEnabled      bool   `json:"cssSelectorsEnabled"`
+	WebStorageEnabled        bool   `json:"webStorageEnabled"`
+	Rotatable                bool   `json:"rotatable"`
+	AcceptSslCerts           bool   `json:"acceptSslCerts"`
+	NativeEvents             bool   `json:"nativeEvents"`
+	Proxy                    Proxy  `json:"proxy"`
 }
 
 func DesiredCapabilities() *Capabilities {
@@ -37,6 +37,7 @@ func DesiredCapabilities() *Capabilities {
 	cap.Rotatable = false
 	cap.AcceptSslCerts = false
 	cap.NativeEvents = true
+	cap.Proxy.ProxyType = "DIRECT"
 
 	return &cap
 }

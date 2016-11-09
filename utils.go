@@ -20,6 +20,9 @@ func init() {
 
 func RouteTemplate(route string, args map[string]interface{}) (string, error) {
 	argKeys := route_param_reg.FindAllString(route, -1)
+	if args == nil {
+		args = map[string]interface{}{}
+	}
 
 	for _, argKey := range argKeys {
 		key := strings.TrimLeft(argKey, ":")
@@ -46,4 +49,14 @@ func FindFreePort() int {
 	port, _ := strconv.Atoi(addrParts[1])
 
 	return port
+}
+
+func IsConnectAble(addr string) bool {
+	conn, err := net.Dial("tcp", addr)
+	if err != nil {
+		return false
+	}
+	defer conn.Close()
+
+	return true
 }

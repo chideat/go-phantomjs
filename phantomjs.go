@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"syscall"
+	"time"
 )
 
 type PhantomJS struct {
@@ -104,20 +104,35 @@ func (phantomJS *PhantomJS) start() error {
 	if err != nil {
 		return errors.New("start phantomjs service failed")
 	}
+
+	for i := 0; ; i++ {
+		select {
+		case <-time.After(1 * time.Second):
+			if IsConnectAble(phantomJS.addr) {
+				return nil
+			}
+		}
+		if i == 30 {
+			phantomJS.Quit()
+			return fmt.Errorf("CAN NOT connect to service %s", phantomJS.addr)
+		}
+	}
+
 	return nil
 }
 
 func (phantomJS *PhantomJS) quit() error {
-	phantomJS.process.Wait()
-	return nil
+	defer func() {
+		phantomJS.logFile.Close()
+		os.RemoveAll(phantomJS.options.LogFilePath)
+		os.RemoveAll(phantomJS.options.CookiesFilePath)
+		os.RemoveAll(phantomJS.options.WorkDir)
+	}()
+	return phantomJS.process.Kill()
 }
 
 func (phantomJS *PhantomJS) Quit() error {
 	return phantomJS.quit()
-}
-
-func (phantomJS *PhantomJS) Kill() {
-	phantomJS.process.Signal(syscall.SIGKILL)
 }
 
 func NewPhantomJS(port int, options *Options) (*PhantomJS, error) {
