@@ -17,114 +17,114 @@ func init() {
 }
 
 type _Commands struct {
-	Status Command
-	NewSession
-	GetallSessions
-	DeleteSession
-	Close
-	Quit
-	Get
-	GoBack
-	GoForward
-	Refresh
-	AddCookie
-	GetCookie
-	GetAllCookies
-	DeleteCookie
-	DeleteAllCookies
-	FindElement
-	FindElements
-	FindChildElement
-	FindChildElements
-	ClearElement
-	ClickElement
-	SendKeysToElement
-	SendKeysToActiveElement
-	SubmitElement
-	UploadFile
-	GetCurrentWindowHandle
-	GetWindowHandles
-	GetWindowSize
-	W3CGetWindowSize
-	GetWindowPosition
-	SetWindowSize
-	W3CSetWindowSize
-	SetWindowPosition
-	SwitchToWindow
-	SwitchToFrame
-	SwitchToParentFrame
-	GetActiveElement
-	GetCurrenturl
-	GetPageSource
-	GetTitle
-	ExecuteScript
-	GetElementText
-	GetElementValue
-	GetElementTagName
-	SetElementSelected
-	IsElementSelected
-	IsElementEnabled
-	IsElementDisplayed
-	GetElementLocation
-	GetElementLocationOnceScrolledIntoView
-	GetElementSize
-	GetElementRect
-	GetElementAttribute
-	GetElementValueOfCssProperty
-	ElementEquals
-	Screenshot
-	ElementScreenshot
-	ImplicitlyWait
-	ExecuteAsyncScript
-	SetScriptTimeout
-	SetTimeouts
-	WindowMaximize
-	W3cMaximizeWindow
-	GetLog
-	GetAvailableLogTypes
-	DismissAlert
-	AcceptAlert
-	SetAlertValue
-	GetAlertText
-	SetAlertCredentials
-	MouseClick
-	MouseDoubleClick
-	MouseButtonDown
-	MouseButtonUp
-	MouseMoveTo
-	SetScreenOrientation
-	GetScreenOrientation
-	TouchSingleTap
-	TouchDown
-	TouchUp
-	TouchMove
-	TouchScroll
-	TouchDoubleTap
-	TouchLongPress
-	TouchFlick
-	ExecuteSql
-	GetLocation
-	SetLocation
-	GetAppCache
-	GetAppCacheStatus
-	ClearAppCache
-	GetLocalStorageItem
-	RemoveLocalStorageItem
-	GetLocalStorageKeys
-	SetLocalStorageItem
-	ClearLocalStorage
-	GetLocalStorageSize
-	GetSessionStorageItem
-	RemoveSessionStorageItem
-	GetSessionStorageKeys
-	SetSessionStorageItem
-	ClearSessionStorage
-	GetSessionStorageSize
-	GetNetworkConnection
-	SetNetworkConnection
-	GetCurrentContextHandle
-	GetContextHandles
-	SwitchToContext
+	Status                                 Command
+	NewSession                             Command
+	GetAllSessions                         Command
+	DeleteSession                          Command
+	Close                                  Command
+	Quit                                   Command
+	Get                                    Command
+	GoBack                                 Command
+	GoForward                              Command
+	Refresh                                Command
+	AddCookie                              Command
+	GetCookie                              Command
+	GetAllCookies                          Command
+	DeleteCookie                           Command
+	DeleteAllCookies                       Command
+	FindElement                            Command
+	FindElements                           Command
+	FindChildElement                       Command
+	FindChildElements                      Command
+	ClearElement                           Command
+	ClickElement                           Command
+	SendKeysToElement                      Command
+	SendKeysToActiveElement                Command
+	SubmitElement                          Command
+	UploadFile                             Command
+	GetCurrentWindowHandle                 Command
+	GetWindowHandles                       Command
+	GetWindowSize                          Command
+	W3CGetWindowSize                       Command
+	GetWindowPosition                      Command
+	SetWindowSize                          Command
+	W3CSetWindowSize                       Command
+	SetWindowPosition                      Command
+	SwitchToWindow                         Command
+	SwitchToFrame                          Command
+	SwitchToParentFrame                    Command
+	GetActiveElement                       Command
+	GetCurrentUrl                          Command
+	GetPageSource                          Command
+	GetTitle                               Command
+	ExecuteScript                          Command
+	GetElementText                         Command
+	GetElementValue                        Command
+	GetElementTagName                      Command
+	SetElementSelected                     Command
+	IsElementSelected                      Command
+	IsElementEnabled                       Command
+	IsElementDisplayed                     Command
+	GetElementLocation                     Command
+	GetElementLocationOnceScrolledIntoView Command
+	GetElementSize                         Command
+	GetElementRect                         Command
+	GetElementAttribute                    Command
+	GetElementValueOfCssProperty           Command
+	ElementEquals                          Command
+	Screenshot                             Command
+	ElementScreenshot                      Command
+	ImplicitlyWait                         Command
+	ExecuteAsyncScript                     Command
+	SetScriptTimeout                       Command
+	SetTimeouts                            Command
+	WindowMaximize                         Command
+	W3cMaximizeWindow                      Command
+	GetLog                                 Command
+	GetAvailableLogTypes                   Command
+	DismissAlert                           Command
+	AcceptAlert                            Command
+	SetAlertValue                          Command
+	GetAlertText                           Command
+	SetAlertCredentials                    Command
+	MouseClick                             Command
+	MouseDoubleClick                       Command
+	MouseButtonDown                        Command
+	MouseButtonUp                          Command
+	MouseMoveTo                            Command
+	SetScreenOrientation                   Command
+	GetScreenOrientation                   Command
+	TouchSingleTap                         Command
+	TouchDown                              Command
+	TouchUp                                Command
+	TouchMove                              Command
+	TouchScroll                            Command
+	TouchDoubleTap                         Command
+	TouchLongPress                         Command
+	TouchFlick                             Command
+	ExecuteSql                             Command
+	GetLocation                            Command
+	SetLocation                            Command
+	GetAppCache                            Command
+	GetAppCacheStatus                      Command
+	ClearAppCache                          Command
+	GetLocalStorageItem                    Command
+	RemoveLocalStorageItem                 Command
+	GetLocalStorageKeys                    Command
+	SetLocalStorageItem                    Command
+	ClearLocalStorage                      Command
+	GetLocalStorageSize                    Command
+	GetSessionStorageItem                  Command
+	RemoveSessionStorageItem               Command
+	GetSessionStorageKeys                  Command
+	SetSessionStorageItem                  Command
+	ClearSessionStorage                    Command
+	GetSessionStorageSize                  Command
+	GetNetworkConnection                   Command
+	SetNetworkConnection                   Command
+	GetCurrentContextHandle                Command
+	GetContextHandles                      Command
+	SwitchToContext                        Command
 }
 
 var Commands = _Commands{
@@ -134,7 +134,7 @@ var Commands = _Commands{
 	DeleteSession:                          Command{Cmd: "deleteSession", Method: "DELETE", Route: "/session/:session_id"},
 	Close:                                  Command{Cmd: "close", Method: "POST", Route: ""},
 	Quit:                                   Command{Cmd: "quit", Method: "DELETE", Route: "/session/:session_id"},
-	Get:                                    Command{Cmd: "get", Method: "GET", Route: "/session/:session_id/url"},
+	Get:                                    Command{Cmd: "get", Method: "POST", Route: "/session/:session_id/url"},
 	GoBack:                                 Command{Cmd: "goBack", Method: "POST", Route: "/session/:session_id/back"},
 	GoForward:                              Command{Cmd: "goForward", Method: "POST", Route: "/session/:session_id/forward"},
 	Refresh:                                Command{Cmd: "refresh", Method: "POST", Route: "/session/:session_id/refresh"},
@@ -249,27 +249,27 @@ type Command struct {
 	Route  string
 }
 
-func (cmd *Command) Execute(server string, params map[string]string, option *ConnectionOption) (*Result, error) {
+func (cmd *Command) Execute(server string, args map[string]interface{}, options *Options) (*Result, error) {
 	if cmd.Route == "" {
 		return nil, fmt.Errorf("cmd %s is NOT supported", cmd.Cmd)
 	}
 
-	route, err := RouteTemplate(cmd.Route, params)
+	route, err := RouteTemplate(cmd.Route, args)
 	if err != nil {
 		return nil, err
 	}
 
 	urlStr := fmt.Sprintf("%s%s", server, route)
 
-	body, err := json.Marshal(params)
+	body, err := json.Marshal(args)
 	if err != nil {
 		return nil, err
 	}
 
-	return cmd.http_request(cmd.Method, urlStr, body, option)
+	return cmd.http_request(cmd.Method, urlStr, body, options)
 }
 
-func (cmd *Command) http_request(method, urlStr string, body []byte, option *ConnectionOption) (*Result, error) {
+func (cmd *Command) http_request(method, urlStr string, body []byte, options *Options) (*Result, error) {
 	u, err := url.Parse(urlStr)
 	if err != nil {
 		return nil, err
@@ -292,7 +292,7 @@ func (cmd *Command) http_request(method, urlStr string, body []byte, option *Con
 	req.Header.Set("Content-type", "application/json;charset=\"UTF-8\"")
 	req.Header.Set("User-Agent", "Golang HTTP Client")
 
-	if option.KeepAlive {
+	if options.KeepAlive {
 		req.Header.Set("Connection", "keep-alive")
 
 		if u.User.Username() != "" {
@@ -316,7 +316,7 @@ func (cmd *Command) http_request(method, urlStr string, body []byte, option *Con
 	}
 
 	if 300 <= resp.StatusCode && resp.StatusCode < 304 {
-		return cmd.http_request("GET", resp.Header.Get("location"), nil, option)
+		return cmd.http_request("GET", resp.Header.Get("location"), nil, options)
 	}
 	if 399 < resp.StatusCode && resp.StatusCode < 500 {
 		return &Result{Code: ErrorCode(resp.StatusCode), Data: dataRaw}, nil

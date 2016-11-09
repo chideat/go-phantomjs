@@ -18,16 +18,16 @@ func init() {
 	ip_addr_reg = regexp.MustCompile("^(.*):([0-9]+)$")
 }
 
-func RouteTemplate(route string, params map[string]string) (string, error) {
-	paramKeys := route_param_reg.FindAllString(route, -1)
+func RouteTemplate(route string, args map[string]interface{}) (string, error) {
+	argKeys := route_param_reg.FindAllString(route, -1)
 
-	for _, paramKey := range paramKeys {
-		key := strings.TrimLeft(paramKey, ":")
-		val, ok := params[key]
+	for _, argKey := range argKeys {
+		key := strings.TrimLeft(argKey, ":")
+		val, ok := args[key]
 		if !ok {
 			return "", fmt.Errorf("need param %s", key)
 		}
-		route = strings.Replace(route, paramKey, val, -1)
+		route = strings.Replace(route, argKey, fmt.Sprintf("%v", val), -1)
 	}
 	return route, nil
 }
