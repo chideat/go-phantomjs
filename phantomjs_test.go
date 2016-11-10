@@ -4,7 +4,7 @@ import "testing"
 
 func TestNewPhantomJSWithExecutePath(t *testing.T) {
 	options := &Options{}
-	phantomJS, err := NewPhantomJSWithExecutePath("/usr/local/bin/phantomjs", 10000, options)
+	phantomJS, err := NewPhantomJSWithExecutePath("/usr/local/bin/phantomjs", 0, options)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -17,7 +17,7 @@ func TestNewPhantomJSWithExecutePath(t *testing.T) {
 
 func TestNewPhantomJS(t *testing.T) {
 	options := &Options{}
-	phantomJS, err := NewPhantomJS(10000, options)
+	phantomJS, err := NewPhantomJS(0, options)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -29,7 +29,7 @@ func TestNewPhantomJS(t *testing.T) {
 
 func TestNewSession(t *testing.T) {
 	options := &Options{}
-	phantomJS, err := NewPhantomJS(10000, options)
+	phantomJS, err := NewPhantomJS(0, options)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -52,7 +52,7 @@ func TestNewSession(t *testing.T) {
 
 func TestGetAllSessions(t *testing.T) {
 	options := &Options{}
-	phantomJS, err := NewPhantomJS(10000, options)
+	phantomJS, err := NewPhantomJS(0, options)
 	if err != nil {
 		t.Fatal(err)
 	}

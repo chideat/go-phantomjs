@@ -150,7 +150,6 @@ func NewPhantomJSWithExecutePath(execPath string, port int, options *Options) (*
 
 	phantomJS := PhantomJS{}
 	phantomJS.execPath = execPath
-	phantomJS.addr = fmt.Sprintf("localhost:%d", port)
 	phantomJS.options = &Options{}
 	*phantomJS.options = *options
 
@@ -198,6 +197,11 @@ func NewPhantomJSWithExecutePath(execPath string, port int, options *Options) (*
 			return nil, fmt.Errorf("can not access cookie file %s", phantomJS.options.CookiesFilePath)
 		}
 	}
+
+	if port == 0 {
+		port = FindFreePort()
+	}
+	phantomJS.addr = fmt.Sprintf("localhost:%d", port)
 
 	err = phantomJS.start()
 	if err != nil {

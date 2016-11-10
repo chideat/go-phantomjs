@@ -36,17 +36,17 @@ func RouteTemplate(route string, args map[string]interface{}) (string, error) {
 }
 
 func FindFreePort() int {
-	nl, err := net.Listen("TCP", ":")
+	nl, err := net.Listen("tcp", ":")
 	if err != nil {
 		panic(err)
 	}
 	defer nl.Close()
 
 	addrParts := ip_addr_reg.FindStringSubmatch(nl.Addr().String())
-	if len(addrParts) != 2 {
+	if len(addrParts) != 3 {
 		panic("invalid addr")
 	}
-	port, _ := strconv.Atoi(addrParts[1])
+	port, _ := strconv.Atoi(addrParts[2])
 
 	return port
 }
