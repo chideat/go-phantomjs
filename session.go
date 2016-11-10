@@ -86,7 +86,7 @@ func (session *Session) GetAllCookies() ([]map[string]interface{}, error) {
 
 	var ret struct {
 		Response
-		Value []map[string]interface{} `json:"value"`
+		Value interface{} `json:"value"`
 	}
 
 	err = json.Unmarshal(res.Data, &ret)
@@ -96,7 +96,22 @@ func (session *Session) GetAllCookies() ([]map[string]interface{}, error) {
 	if ret.Status != 0 {
 		return nil, fmt.Errorf("%s", res.Data)
 	}
-	return ret.Value, nil
+	_, ok := ret.Value.(map[string]interface{})
+	if ok {
+		return []map[string]interface{}{}, nil
+	}
+	vals, ok := ret.Value.([]interface{})
+	if !ok {
+		return nil, fmt.Errorf("invalid cookie format")
+	}
+	cookies := []map[string]interface{}{}
+	for _, val := range vals {
+		cookie, ok := val.(map[string]interface{})
+		if ok {
+			cookies = append(cookies, cookie)
+		}
+	}
+	return cookies, nil
 }
 
 func (session *Session) DeleteCookie(name string) error {
@@ -115,14 +130,13 @@ func (session *Session) DeleteCookie(name string) error {
 	if err != nil {
 		return err
 	}
-	if ret.Status == 0 {
+	if ret.Status != 0 {
 		return fmt.Errorf("%s", res.Data)
 	}
 	return nil
 }
 
 func (session *Session) DeleteAllCookies() error {
-	// {"sessionId":"ccb17e40-a580-11e6-826c-4bb6080aa8c0","status":0,"value":{}}
 	args := map[string]interface{}{
 		"sessionId": session.Id,
 	}
@@ -137,7 +151,7 @@ func (session *Session) DeleteAllCookies() error {
 	if err != nil {
 		return err
 	}
-	if ret.Status == 0 {
+	if ret.Status != 0 {
 		return fmt.Errorf("%s", res.Data)
 	}
 	return nil
@@ -213,13 +227,9 @@ func (session *Session) GetWindowHandles() ([]string, error) {
 	return ret.Value, nil
 }
 
-func (session *Session) GetWindowSize(width, height int) (int, int, error) {
-	// {"width": 100, "windowHandle": "current", "sessionId": "ccb17e40-a580-11e6-826c-4bb6080aa8c0", "height": 100}
-	// {"sessionId":"ccb17e40-a580-11e6-826c-4bb6080aa8c0","status":0,"value":{}}
+func (session *Session) GetWindowSize() (int, int, error) {
 	args := map[string]interface{}{
 		"sessionId":    session.Id,
-		"width":        width,
-		"height":       height,
 		"windowHandle": "current",
 	}
 
@@ -271,7 +281,6 @@ func (session *Session) SetWindowSize(width, height int) error {
 }
 
 func (session *Session) GetWindowPosition() (int, int, error) {
-	// {"sessionId":"209aa290-a584-11e6-a29c-5d4dcda7337f","status":0,"value":{"x":0,"y":0}}
 	args := map[string]interface{}{
 		"sessionId":    session.Id,
 		"windowHandle": "current",
@@ -324,7 +333,6 @@ func (session *Session) SetWindowPosition(x, y int) error {
 }
 
 func (session *Session) GetCurrentUrl() (string, error) {
-	// {"sessionId":"ccb17e40-a580-11e6-826c-4bb6080aa8c0","status":0,"value":"https://www.baidu.com/"}
 	args := map[string]interface{}{
 		"sessionId": session.Id,
 	}
@@ -378,7 +386,7 @@ func (session *Session) GetTitle() (string, error) {
 		"sessionId": session.Id,
 	}
 
-	res, err := Commands.GetPageSource.Execute(session.addr, args, session.options)
+	res, err := Commands.GetTitle.Execute(session.addr, args, session.options)
 	if err != nil {
 		return "", err
 	}
@@ -398,7 +406,6 @@ func (session *Session) GetTitle() (string, error) {
 }
 
 func (session *Session) ExecuteScript(script string, _args []interface{}) error {
-	// {"sessionId":"eab2af60-a57e-11e6-8678-73f6cd39aa02","status":0,"value":null}
 	args := map[string]interface{}{
 		"sessionId": session.Id,
 		"script":    script,
@@ -421,7 +428,28 @@ func (session *Session) ExecuteScript(script string, _args []interface{}) error 
 	return nil
 }
 
-func (session *Session) ExecuteAsyncScript(script string, args map[string]interface{}) {
+// not known how to use
+func (session *Session) ExecuteAsyncScript(script string, _args map[string]interface{}) error {
+	args := map[string]interface{}{
+		"sessionId": session.Id,
+		"script":    script,
+		"args":      _args,
+	}
+
+	res, err := Commands.ExecuteAsyncScript.Execute(session.addr, args, session.options)
+	if err != nil {
+		return err
+	}
+
+	var ret Response
+	err = json.Unmarshal(res.Data, &ret)
+	if err != nil {
+		return err
+	}
+	if ret.Status != 0 {
+		return fmt.Errorf("%s", res.Data)
+	}
+	return nil
 }
 
 func (session *Session) GetElementText() {
