@@ -208,6 +208,32 @@ func TestSetWindowPosition(t *testing.T) {
 	}
 }
 
+func TestAddCookie(t *testing.T) {
+	options := &Options{}
+	phantomJS, err := NewPhantomJS(10000, options)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer phantomJS.Quit()
+
+	session, err := phantomJS.NewSession(nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer session.Close()
+
+	err = session.Get("https://www.baidu.com")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	cookie := Cookie{Name: "test", Path: "/", Value: "hello, world", Domain: ".baidu.com"}
+	err = session.AddCookie(&cookie)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestGetAllCookies(t *testing.T) {
 	options := &Options{}
 	phantomJS, err := NewPhantomJS(10000, options)
@@ -232,6 +258,40 @@ func TestGetAllCookies(t *testing.T) {
 	}
 	if len(cookies) == 0 {
 		t.Fatal("get cookies failed")
+	}
+}
+
+func TestGetCookie(t *testing.T) {
+	options := &Options{}
+	phantomJS, err := NewPhantomJS(10000, options)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer phantomJS.Quit()
+
+	session, err := phantomJS.NewSession(nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer session.Close()
+
+	err = session.Get("https://www.baidu.com")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	cookie := Cookie{Name: "test", Path: "/", Value: "hello, world", Domain: ".baidu.com"}
+	err = session.AddCookie(&cookie)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	ck, err := session.GetCookie("test")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if ck == nil || ck.Name != cookie.Name || ck.Value != cookie.Value {
+		t.Fatal("get cookie test failed")
 	}
 }
 

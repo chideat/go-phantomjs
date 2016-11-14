@@ -71,12 +71,38 @@ func (session *Session) Refresh() error {
 	return nil
 }
 
-func (session *Session) GetAllCookies() ([]map[string]interface{}, error) {
+func (session *Session) AddCookie(cookie *Cookie) error {
+	args := map[string]interface{}{
+		"sessionId": session.Id,
+		"cookie":    cookie,
+	}
+
+	res, err := Commands.AddCookie.Execute(session.addr, args, session.options)
+	if err != nil {
+		return err
+	}
+	if res.Code != ErrorCode_Success {
+		return errors.New(string(res.Data))
+	}
+
+	var ret Response
+
+	err = json.Unmarshal(res.Data, &ret)
+	if err != nil {
+		return err
+	}
+	if ret.Status != 0 {
+		return fmt.Errorf("%s", res.Data)
+	}
+	return nil
+}
+
+func (session *Session) GetAllCookies() ([]*Cookie, error) {
 	args := map[string]interface{}{
 		"sessionId": session.Id,
 	}
 
-	res, err := Commands.Refresh.Execute(session.addr, args, session.options)
+	res, err := Commands.GetAllCookies.Execute(session.addr, args, session.options)
 	if err != nil {
 		return nil, err
 	}
@@ -86,32 +112,43 @@ func (session *Session) GetAllCookies() ([]map[string]interface{}, error) {
 
 	var ret struct {
 		Response
-		Value interface{} `json:"value"`
+		Value []*Cookie `json:"value"`
 	}
 
 	err = json.Unmarshal(res.Data, &ret)
 	if err != nil {
-		return nil, err
+		var ret struct {
+			Response
+			Value interface{} `json:"value"`
+		}
+		err = json.Unmarshal(res.Data, &ret)
+		if err != nil {
+			return nil, err
+		}
+
+		if ret.Status != 0 {
+			return nil, fmt.Errorf("%s", res.Data)
+		}
+		return []*Cookie{}, nil
 	}
+
 	if ret.Status != 0 {
 		return nil, fmt.Errorf("%s", res.Data)
 	}
-	_, ok := ret.Value.(map[string]interface{})
-	if ok {
-		return []map[string]interface{}{}, nil
+	return ret.Value, nil
+}
+
+func (session *Session) GetCookie(name string) (*Cookie, error) {
+	cookies, err := session.GetAllCookies()
+	if err != nil {
+		return nil, err
 	}
-	vals, ok := ret.Value.([]interface{})
-	if !ok {
-		return nil, fmt.Errorf("invalid cookie format")
-	}
-	cookies := []map[string]interface{}{}
-	for _, val := range vals {
-		cookie, ok := val.(map[string]interface{})
-		if ok {
-			cookies = append(cookies, cookie)
+	for _, cookie := range cookies {
+		if cookie.Name == name {
+			return cookie, nil
 		}
 	}
-	return cookies, nil
+	return nil, nil
 }
 
 func (session *Session) DeleteCookie(name string) error {
