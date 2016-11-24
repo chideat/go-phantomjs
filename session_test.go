@@ -4,7 +4,7 @@ import "testing"
 
 func TestGet(t *testing.T) {
 	options := &Options{}
-	phantomJS, err := NewPhantomJS(10000, options)
+	phantomJS, err := NewPhantomJS(0, options)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -24,7 +24,7 @@ func TestGet(t *testing.T) {
 
 func TestRefresh(t *testing.T) {
 	options := &Options{}
-	phantomJS, err := NewPhantomJS(10000, options)
+	phantomJS, err := NewPhantomJS(0, options)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -49,7 +49,7 @@ func TestRefresh(t *testing.T) {
 
 func TestGetCurrentUrl(t *testing.T) {
 	options := &Options{}
-	phantomJS, err := NewPhantomJS(10000, options)
+	phantomJS, err := NewPhantomJS(0, options)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -78,7 +78,7 @@ func TestGetCurrentUrl(t *testing.T) {
 
 func TestGetTitle(t *testing.T) {
 	options := &Options{}
-	phantomJS, err := NewPhantomJS(10000, options)
+	phantomJS, err := NewPhantomJS(0, options)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -107,7 +107,7 @@ func TestGetTitle(t *testing.T) {
 
 func TestGetPageSource(t *testing.T) {
 	options := &Options{}
-	phantomJS, err := NewPhantomJS(10000, options)
+	phantomJS, err := NewPhantomJS(0, options)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -136,7 +136,7 @@ func TestGetPageSource(t *testing.T) {
 
 func TestWindowSize(t *testing.T) {
 	options := &Options{}
-	phantomJS, err := NewPhantomJS(10000, options)
+	phantomJS, err := NewPhantomJS(0, options)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -164,7 +164,7 @@ func TestWindowSize(t *testing.T) {
 
 func TestGetWindowPosition(t *testing.T) {
 	options := &Options{}
-	phantomJS, err := NewPhantomJS(10000, options)
+	phantomJS, err := NewPhantomJS(0, options)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -187,7 +187,7 @@ func TestGetWindowPosition(t *testing.T) {
 
 func TestSetWindowPosition(t *testing.T) {
 	options := &Options{}
-	phantomJS, err := NewPhantomJS(10000, options)
+	phantomJS, err := NewPhantomJS(0, options)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -210,7 +210,7 @@ func TestSetWindowPosition(t *testing.T) {
 
 func TestAddCookie(t *testing.T) {
 	options := &Options{}
-	phantomJS, err := NewPhantomJS(10000, options)
+	phantomJS, err := NewPhantomJS(0, options)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -236,7 +236,7 @@ func TestAddCookie(t *testing.T) {
 
 func TestGetAllCookies(t *testing.T) {
 	options := &Options{}
-	phantomJS, err := NewPhantomJS(10000, options)
+	phantomJS, err := NewPhantomJS(0, options)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -263,7 +263,7 @@ func TestGetAllCookies(t *testing.T) {
 
 func TestGetCookie(t *testing.T) {
 	options := &Options{}
-	phantomJS, err := NewPhantomJS(10000, options)
+	phantomJS, err := NewPhantomJS(0, options)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -297,7 +297,7 @@ func TestGetCookie(t *testing.T) {
 
 func TestDeleteAllCookies(t *testing.T) {
 	options := &Options{}
-	phantomJS, err := NewPhantomJS(10000, options)
+	phantomJS, err := NewPhantomJS(0, options)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -330,7 +330,7 @@ func TestDeleteAllCookies(t *testing.T) {
 
 func TestSetPageLoadTimeouts(t *testing.T) {
 	options := &Options{}
-	phantomJS, err := NewPhantomJS(10000, options)
+	phantomJS, err := NewPhantomJS(0, options)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -350,7 +350,7 @@ func TestSetPageLoadTimeouts(t *testing.T) {
 
 func TestSetScriptTimeout(t *testing.T) {
 	options := &Options{}
-	phantomJS, err := NewPhantomJS(10000, options)
+	phantomJS, err := NewPhantomJS(0, options)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -362,7 +362,7 @@ func TestSetScriptTimeout(t *testing.T) {
 	}
 	defer session.Close()
 
-	err = session.SetScriptTimeout(1000)
+	err = session.SetScriptTimeout(0)
 	if err != nil {
 		t.Fatal(err)
 	}
