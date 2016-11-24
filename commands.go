@@ -295,7 +295,7 @@ func (cmd *Command) http_request(method, urlStr string, body []byte, options *Op
 	if options.KeepAlive {
 		req.Header.Set("Connection", "keep-alive")
 
-		if u.User.Username() != "" {
+		if u.User != nil && u.User.Username() != "" {
 			name := u.User.Username()
 			passwd, _ := u.User.Password()
 			auth := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", name, passwd)))
