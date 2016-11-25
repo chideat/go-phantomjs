@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"syscall"
 	"time"
 )
 
@@ -99,6 +100,7 @@ func (phantomJS *PhantomJS) start() error {
 	attr.Dir = phantomJS.options.WorkDir
 	attr.Env = os.Environ()
 	attr.Files = []*os.File{nil, phantomJS.logFile, phantomJS.logFile}
+	attr.Sys = &syscall.SysProcAttr{Setpgid: true}
 
 	phantomJS.process, err = os.StartProcess(phantomJS.execPath, args, &attr)
 	if err != nil {
@@ -117,8 +119,6 @@ func (phantomJS *PhantomJS) start() error {
 			return fmt.Errorf("CAN NOT connect to service %s", phantomJS.addr)
 		}
 	}
-
-	return nil
 }
 
 func (phantomJS *PhantomJS) quit() error {
@@ -128,7 +128,12 @@ func (phantomJS *PhantomJS) quit() error {
 		os.RemoveAll(phantomJS.options.CookiesFilePath)
 		os.RemoveAll(phantomJS.options.WorkDir)
 	}()
-	return phantomJS.process.Kill()
+	err := phantomJS.process.Kill()
+	if err != nil {
+		return err
+	}
+	_, err = phantomJS.process.Wait()
+	return err
 }
 
 func (phantomJS *PhantomJS) Quit() error {

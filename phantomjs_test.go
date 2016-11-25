@@ -12,10 +12,21 @@ func TestNewPhantomJSWithExecutePath(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log("ok")
 }
 
 func TestNewPhantomJS(t *testing.T) {
+	options := &Options{}
+	phantomJS, err := NewPhantomJS(0, options)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = phantomJS.Quit()
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestQuit(t *testing.T) {
 	options := &Options{}
 	phantomJS, err := NewPhantomJS(0, options)
 	if err != nil {
@@ -34,7 +45,7 @@ func TestNewSession(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() {
-		err := phantomJS.Quit()
+		err = phantomJS.Quit()
 		if err != nil {
 			t.Fatal(err)
 		}
