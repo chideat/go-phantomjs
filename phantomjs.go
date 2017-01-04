@@ -92,6 +92,7 @@ func (phantomJS *PhantomJS) GetAllSessions() ([]*Session, error) {
 func (phantomJS *PhantomJS) start() error {
 	var err error
 
+	// init args
 	args := []string{}
 	args = append(args, fmt.Sprintf("--cookies-file=%s", phantomJS.options.CookiesFilePath))
 	args = append(args, fmt.Sprintf("--webdriver=%s", phantomJS.addr))

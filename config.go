@@ -5,7 +5,6 @@ type Capabilities struct {
 	DriverName               string `json:"driverName"`
 	Version                  string `json:"version"`
 	Platform                 string `json:"platform"`
-	JavscriptEnabled         bool   `json:"javascriptEnabled"`
 	TakesScreenshot          bool   `json:"takesScreenshot"`
 	HandlesAlerts            bool   `json:"handlesAlerts"`
 	DatabaseEnabled          bool   `json:"databaseEnabled"`
@@ -17,7 +16,20 @@ type Capabilities struct {
 	Rotatable                bool   `json:"rotatable"`
 	AcceptSslCerts           bool   `json:"acceptSslCerts"`
 	NativeEvents             bool   `json:"nativeEvents"`
-	Proxy                    Proxy  `json:"proxy"`
+	// page.settings
+	JavscriptEnabled              bool   `json:"phantomjs.page.settings.javascriptEnabled"`
+	LoadImages                    bool   `json:"phantomjs.page.settings.loadImages"`
+	LocalToRemoteUrlAccessEnabled bool   `json:"phantomjs.page.settings.localToRemoteUrlAccessEnabled"`
+	UserAgent                     string `json:"phantomjs.page.settings.userAgent,omitempty,omitempty"`
+	UserName                      string `json:"phantomjs.page.settings.userName,omitempty,omitempty"`
+	Password                      string `json:"phantomjs.page.settings.password,omitempty,omitempty"`
+	XSSAuditingEnabled            bool   `json:"phantomjs.page.settings.XSSAuditingEnabled"`
+	WebSecurityEnabled            bool   `json:"phantomjs.page.settings.webSecurityEnabled"`
+	ResourceTimeout               int64  `json:"phantomjs.page.settings.resourceTimeout,omitempty"` // milli-secs
+	// page.customHeaders
+	Headers map[string]string `json:"phantomjs.page.customHeaders,omitempty"`
+
+	Proxy Proxy `json:"proxy"`
 }
 
 func DesiredCapabilities() *Capabilities {
@@ -25,7 +37,6 @@ func DesiredCapabilities() *Capabilities {
 	cap.BrowserName = "phantomjs"
 	cap.Version = ""
 	cap.Platform = ""
-	cap.JavscriptEnabled = true
 	cap.TakesScreenshot = true
 	cap.HandlesAlerts = false
 	cap.DatabaseEnabled = false
@@ -38,6 +49,11 @@ func DesiredCapabilities() *Capabilities {
 	cap.AcceptSslCerts = false
 	cap.NativeEvents = true
 	cap.Proxy.ProxyType = "DIRECT"
+	// page.settings
+	cap.JavscriptEnabled = true
+	cap.LoadImages = false
+	cap.UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36"
+	cap.ResourceTimeout = 2 * 60 * 1000 // default timeout in 2 minutes
 
 	return &cap
 }
@@ -49,7 +65,6 @@ type Options struct {
 
 	KeepAlive bool
 	IsRemote  bool
-	UserAgent string
 }
 
 func DefaultOptions() *Options {
@@ -58,7 +73,6 @@ func DefaultOptions() *Options {
 	options.WorkDir = ""
 	options.KeepAlive = true
 	options.IsRemote = true
-	options.UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36"
 
 	return &options
 }

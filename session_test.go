@@ -1,6 +1,9 @@
 package phantomjs
 
-import "testing"
+import (
+	"sync"
+	"testing"
+)
 
 func TestGet(t *testing.T) {
 	options := &Options{}
@@ -175,6 +178,83 @@ func TestGetPageSources(t *testing.T) {
 			t.Fatal("get empty webpage source")
 		}
 	}
+}
+
+func TestGetPageSourcesAsync(t *testing.T) {
+	options := &Options{}
+	phantomJS, err := NewPhantomJS(0, options)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer phantomJS.Quit()
+
+	urls := []string{
+		"http://www.25pp.com/ios/wallpaper/64/13/",
+		"http://www.25pp.com/ios/wallpaper/64/22/",
+		"http://www.25pp.com/ios/wallpaper/64/19/",
+		"http://www.25pp.com/ios/wallpaper/64/15/",
+		"http://www.25pp.com/ios/wallpaper/64/12/",
+		"http://www.25pp.com/ios/wallpaper/64/17/",
+		"http://www.25pp.com/ios/wallpaper/64/20/",
+		"http://www.25pp.com/ios/wallpaper/64/18/",
+		"http://www.25pp.com/ios/wallpaper/64/16/",
+		"http://www.25pp.com/ios/wallpaper/64/21/",
+		"http://www.7kk.com/shoujibizhi/shouji_qiche/new-1---1.html",
+		"http://www.7kk.com/shoujibizhi/shouji_meinv/new-1---2.html",
+		"http://www.7kk.com/shoujibizhi/shouji_mingxing/new-1---1.html",
+		"http://www.7kk.com/shoujibizhi/shouji_youxi/new-1---1.html",
+		"http://www.7kk.com/shoujibizhi/shouji_tiyu/new----1.html",
+		"http://www.7kk.com/shoujibizhi/shouji_yingshi/new-1---1.html",
+		"http://www.7kk.com/shoujibizhi/shouji_chongwu/new----1.html",
+		"http://www.7kk.com/tagyun/2029.html",
+		"http://www.7kk.com/tagyun/2076_6.html",
+		"http://theiphonewalls.com/category/city/",
+		"http://theiphonewalls.com/category/plain/",
+		"http://theiphonewalls.com/category/patterns/",
+		"http://theiphonewalls.com/category/landscape/",
+		"http://theiphonewalls.com/category/nature/",
+		"http://theiphonewalls.com/category/technology/",
+		"http://theiphonewalls.com/category/flowers/",
+		"http://theiphonewalls.com/category/games/",
+		"http://theiphonewalls.com/category/paintings/",
+		"http://theiphonewalls.com/category/abstract/",
+		"http://www.bz55.com/shoujibizhi/chuangyisjbz/",
+		"http://www.bz55.com/shoujibizhi/fengjingsjbz/",
+		"http://www.bz55.com/shoujibizhi/meinvsjbz/",
+		"http://www.bz55.com/shoujibizhi/mingxingsjbz/",
+		"http://www.bz55.com/shoujibizhi/xiaoqingxin/",
+		"http://www.bz55.com/shoujibizhi/youxisjbz/",
+		"http://www.bz55.com/shoujibizhi/zhiwusjbz/",
+	}
+
+	waitGroup := &sync.WaitGroup{}
+	waitGroup.Add(len(urls))
+	for _, urlStr := range urls {
+		go func(urlStr string) {
+			defer waitGroup.Done()
+
+			session, err := phantomJS.NewSession(nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer session.Close()
+
+			err = session.Get(urlStr)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			source, err := session.GetPageSource()
+			if err != nil {
+				t.Fatal(err)
+			}
+			if source == "" {
+				t.Fatal("get empty webpage source")
+			}
+		}(urlStr)
+	}
+
+	waitGroup.Wait()
 }
 
 func TestWindowSize(t *testing.T) {
