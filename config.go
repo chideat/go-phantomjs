@@ -53,7 +53,7 @@ func DesiredCapabilities() *Capabilities {
 	cap.JavscriptEnabled = true
 	cap.LoadImages = false
 	cap.UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36"
-	cap.ResourceTimeout = 2 * 60 * 1000 // default timeout in 2 minutes
+	cap.ResourceTimeout = 60 * 1000 // default timeout in 60 seconds
 
 	return &cap
 }
