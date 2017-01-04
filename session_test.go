@@ -134,6 +134,49 @@ func TestGetPageSource(t *testing.T) {
 	}
 }
 
+func TestGetPageSources(t *testing.T) {
+	options := &Options{}
+	phantomJS, err := NewPhantomJS(0, options)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer phantomJS.Quit()
+
+	urls := []string{
+		"http://www.25pp.com/ios/wallpaper/64/13/",
+		"http://www.25pp.com/ios/wallpaper/64/22/",
+		"http://www.25pp.com/ios/wallpaper/64/19/",
+		"http://www.25pp.com/ios/wallpaper/64/15/",
+		"http://www.25pp.com/ios/wallpaper/64/12/",
+		"http://www.25pp.com/ios/wallpaper/64/17/",
+		"http://www.25pp.com/ios/wallpaper/64/20/",
+		"http://www.25pp.com/ios/wallpaper/64/18/",
+		"http://www.25pp.com/ios/wallpaper/64/16/",
+		"http://www.25pp.com/ios/wallpaper/64/21/",
+	}
+
+	for _, urlStr := range urls {
+		session, err := phantomJS.NewSession(nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer session.Close()
+
+		err = session.Get(urlStr)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		source, err := session.GetPageSource()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if source == "" {
+			t.Fatal("get empty webpage source")
+		}
+	}
+}
+
 func TestWindowSize(t *testing.T) {
 	options := &Options{}
 	phantomJS, err := NewPhantomJS(0, options)

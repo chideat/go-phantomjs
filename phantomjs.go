@@ -128,12 +128,16 @@ func (phantomJS *PhantomJS) quit() error {
 		os.RemoveAll(phantomJS.options.CookiesFilePath)
 		os.RemoveAll(phantomJS.options.WorkDir)
 	}()
-	err := phantomJS.process.Kill()
-	if err != nil {
+
+	if phantomJS.process != nil {
+		err := phantomJS.process.Kill()
+		if err != nil {
+			return err
+		}
+		_, err = phantomJS.process.Wait()
 		return err
 	}
-	_, err = phantomJS.process.Wait()
-	return err
+	return nil
 }
 
 func (phantomJS *PhantomJS) Quit() error {
