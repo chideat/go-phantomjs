@@ -28,7 +28,7 @@ func RouteTemplate(route string, args map[string]interface{}) (string, error) {
 		key := strings.TrimLeft(argKey, ":")
 		val, ok := args[key]
 		if !ok {
-			return "", fmt.Errorf("need param %s", key)
+			return "", fmt.Errorf("RouteTemplate: need param %s", key)
 		}
 		route = strings.Replace(route, argKey, fmt.Sprintf("%v", val), -1)
 	}

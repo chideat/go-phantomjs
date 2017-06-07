@@ -92,17 +92,13 @@ func (phantomJS *PhantomJS) GetAllSessions() ([]*Session, error) {
 func (phantomJS *PhantomJS) start() error {
 	var err error
 
-	// init args
-	args := []string{}
-	args = append(args, fmt.Sprintf("--cookies-file=%s", phantomJS.options.CookiesFilePath))
-	args = append(args, fmt.Sprintf("--webdriver=%s", phantomJS.addr))
-
 	attr := os.ProcAttr{}
 	attr.Dir = phantomJS.options.WorkDir
 	attr.Env = os.Environ()
 	attr.Files = []*os.File{nil, phantomJS.logFile, phantomJS.logFile}
 	attr.Sys = &syscall.SysProcAttr{Setpgid: true}
 
+	args := phantomJS.options.Args()
 	phantomJS.process, err = os.StartProcess(phantomJS.execPath, args, &attr)
 	if err != nil {
 		return errors.New("start phantomjs service failed")
@@ -124,9 +120,11 @@ func (phantomJS *PhantomJS) start() error {
 
 func (phantomJS *PhantomJS) quit() error {
 	defer func() {
-		phantomJS.logFile.Close()
-		os.RemoveAll(phantomJS.options.LogFilePath)
-		os.RemoveAll(phantomJS.options.CookiesFilePath)
+		if phantomJS.logFile != nil {
+			phantomJS.logFile.Close()
+			os.RemoveAll(phantomJS.options.LogFilePath)
+		}
+		os.RemoveAll(phantomJS.options.CookiesFile)
 		os.RemoveAll(phantomJS.options.WorkDir)
 	}()
 
@@ -166,7 +164,7 @@ func NewPhantomJSWithExecutePath(execPath string, port int, options *Options) (*
 	if phantomJS.options.WorkDir == "" {
 		phantomJS.options.WorkDir, err = ioutil.TempDir("/tmp", "phantomjs")
 		if err != nil {
-			return nil, fmt.Errorf("create temp workspace failed")
+			return nil, fmt.Errorf("create workspace failed")
 		}
 	}
 	_, err = os.Stat(phantomJS.options.WorkDir)
@@ -194,17 +192,17 @@ func NewPhantomJSWithExecutePath(execPath string, port int, options *Options) (*
 		}
 	}
 
-	if phantomJS.options.CookiesFilePath == "" {
+	if phantomJS.options.CookiesFile == "" {
 		cookieFile, err := ioutil.TempFile(phantomJS.options.WorkDir, "cookie")
 		if err != nil {
 			return nil, errors.New("open temp cookie file failed")
 		}
-		phantomJS.options.CookiesFilePath = cookieFile.Name()
+		phantomJS.options.CookiesFile = cookieFile.Name()
 		cookieFile.Close()
 	} else {
-		info, err := os.Stat(phantomJS.options.CookiesFilePath)
+		info, err := os.Stat(phantomJS.options.CookiesFile)
 		if err != nil && info.IsDir() {
-			return nil, fmt.Errorf("can not access cookie file %s", phantomJS.options.CookiesFilePath)
+			return nil, fmt.Errorf("can not access cookie file %s", phantomJS.options.CookiesFile)
 		}
 	}
 
@@ -212,6 +210,7 @@ func NewPhantomJSWithExecutePath(execPath string, port int, options *Options) (*
 		port = FindFreePort()
 	}
 	phantomJS.addr = fmt.Sprintf("localhost:%d", port)
+	phantomJS.options.Webdriver = phantomJS.addr
 
 	err = phantomJS.start()
 	if err != nil {

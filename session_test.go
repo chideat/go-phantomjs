@@ -25,6 +25,29 @@ func TestGet(t *testing.T) {
 	}
 }
 
+func TestGetHTTPProxy(t *testing.T) {
+	options := &Options{}
+	phantomJS, err := NewPhantomJS(0, options)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer phantomJS.Quit()
+
+	cap := DesiredCapabilities()
+	cap.Proxy.HTTPProxy = "127.0.0.1:6152"
+	cap.Proxy.ProxyType = "http"
+	session, err := phantomJS.NewSession(cap)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer session.Close()
+
+	err = session.Get("https://www.youtube.com/watch?v=qmeAAp9rSVY")
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestRefresh(t *testing.T) {
 	options := &Options{}
 	phantomJS, err := NewPhantomJS(0, options)
@@ -135,6 +158,95 @@ func TestGetPageSource(t *testing.T) {
 	if source == "" {
 		t.Fatal("get empty webpage source")
 	}
+}
+
+func TestGetPageSourceHTTPProxy(t *testing.T) {
+	options := &Options{}
+	phantomJS, err := NewPhantomJS(0, options)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer phantomJS.Quit()
+
+	cap := DesiredCapabilities()
+	cap.Proxy.HTTPProxy = "127.0.0.1:6152"
+	cap.Proxy.ProxyType = "http"
+	session, err := phantomJS.NewSession(cap)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer session.Close()
+
+	err = session.Get("https://www.youtube.com/watch?v=qmeAAp9rSVY")
+	if err != nil {
+		t.Fatal(err)
+	}
+	source, err := session.GetPageSource()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if source == "" {
+		t.Fatal("get empty webpage source")
+	}
+	t.Log(source)
+}
+
+func TestGetPageSourceHTTPSProxy(t *testing.T) {
+	options := &Options{}
+	phantomJS, err := NewPhantomJS(0, options)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer phantomJS.Quit()
+
+	cap := DesiredCapabilities()
+	cap.Proxy.SSLProxy = "127.0.0.1:6152"
+	cap.Proxy.ProxyType = "http"
+	session, err := phantomJS.NewSession(cap)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer session.Close()
+
+	err = session.Get("https://www.youtube.com/watch?v=qmeAAp9rSVY")
+	if err != nil {
+		t.Fatal(err)
+	}
+	source, err := session.GetPageSource()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if source == "" {
+		t.Fatal("get empty webpage source")
+	}
+}
+
+func TestGetPageSourceSocksProxy(t *testing.T) {
+	options := &Options{}
+	phantomJS, err := NewPhantomJS(0, options)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer phantomJS.Quit()
+
+	cap := DesiredCapabilities()
+	cap.Proxy.ProxyType = "manual"
+	cap.Proxy.HTTPProxy = "127.0.0.1:6152"
+	session, err := phantomJS.NewSession(cap)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer session.Close()
+
+	err = session.Get("https://www.youtube.com/watch?v=qmeAAp9rSVY")
+	if err != nil {
+		t.Fatal(err)
+	}
+	source, err := session.GetPageSource()
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(source)
 }
 
 func TestGetPageSources(t *testing.T) {

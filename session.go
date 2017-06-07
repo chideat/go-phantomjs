@@ -415,6 +415,9 @@ func (session *Session) GetPageSource() (string, error) {
 	if ret.Status != 0 {
 		return "", fmt.Errorf("%s", res.Data)
 	}
+	if ret.Value == "<html><head></head><body></body></html>" {
+		return "", fmt.Errorf("Session.GetPageSource: get empty page source")
+	}
 	return ret.Value, nil
 }
 
