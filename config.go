@@ -35,7 +35,7 @@ type Capabilities struct {
 	// page.customHeaders
 	Headers map[string]string `json:"phantomjs.page.customHeaders,omitempty"`
 
-	Proxy Proxy `json:"proxy"`
+	Proxy *Proxy `json:"proxy,omitempty"`
 }
 
 func DesiredCapabilities() *Capabilities {
@@ -43,7 +43,6 @@ func DesiredCapabilities() *Capabilities {
 	cap.BrowserName = "phantomjs"
 	cap.Version = ""
 	cap.Platform = ""
-	cap.TakesScreenshot = true
 	cap.HandlesAlerts = false
 	cap.DatabaseEnabled = false
 	cap.LocationContextEnabled = false
@@ -54,7 +53,6 @@ func DesiredCapabilities() *Capabilities {
 	cap.Rotatable = false
 	cap.AcceptSslCerts = false
 	cap.NativeEvents = true
-	cap.Proxy.ProxyType = "DIRECT"
 	// page.settings
 	cap.JavscriptEnabled = true
 	cap.LoadImages = false
