@@ -194,7 +194,36 @@ func (session *Session) DeleteAllCookies() error {
 	return nil
 }
 
-func (session *Session) FindElement() {
+func (session *Session) FindElement(using, value string) (*Element, error) {
+	args := map[string]interface{}{
+		"sessionId": session.Id,
+		"using":     using,
+		"value":     value,
+	}
+
+	res, err := Commands.FindElement.Execute(session.addr, args, session.options)
+	if err != nil {
+		return nil, err
+	}
+
+	var ret Response
+	err = json.Unmarshal(res.Data, &ret)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.Status != 0 {
+		return nil, fmt.Errorf("%s", res.Data)
+	}
+
+	var element *Element
+	err = json.Unmarshal(ret.Value, &element)
+	if err != nil {
+		return nil, err
+	}
+
+	element.Session = session
+	return element, nil
 }
 
 func (session *Session) FindElements() {
@@ -207,9 +236,6 @@ func (session *Session) FindChildElements() {
 }
 
 func (session *Session) ClearElement() {
-}
-
-func (session *Session) ClickElement() {
 }
 
 func (session *Session) GetCurrentWindowHandle() (string, error) {
@@ -394,7 +420,6 @@ func (session *Session) GetCurrentUrl() (string, error) {
 }
 
 func (session *Session) GetPageSource() (string, error) {
-	// {"sessionId":"21f71130-a577-11e6-b9eb-8f2f50092c66","status":0,"value":"<html></html>"}
 	args := map[string]interface{}{
 		"sessionId": session.Id,
 	}
@@ -490,15 +515,6 @@ func (session *Session) ExecuteAsyncScript(script string, _args map[string]inter
 		return fmt.Errorf("%s", res.Data)
 	}
 	return nil
-}
-
-func (session *Session) GetElementText() {
-}
-
-func (session *Session) GetElementValue() {
-}
-
-func (session *Session) GetElementTagValue() {
 }
 
 func (session *Session) IsElementSelected() {
